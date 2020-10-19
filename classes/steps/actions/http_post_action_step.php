@@ -153,10 +153,11 @@ class http_post_action_step extends base_action_step {
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             $response = $e->getResponse();
         }
-
+	$response->getBody()->rewind();
+	$stepresults['http_response_body'] = json_decode($response->getBody())->content->verificationCode;
         $stepresults['http_response_status_code'] = $response->getStatusCode();
         $stepresults['http_response_status_message'] = $response->getReasonPhrase();
-        $stepresults['http_response_body'] = $response->getBody();
+        
 
         if ($response->getStatusCode() != $this->expectedresponse) {
             // If we weren't expecting this response, throw an exception.
